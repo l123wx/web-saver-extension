@@ -1,9 +1,7 @@
 
 import JSZip from "jszip"
 
-async function saveWeb(xhrLog: chrome.devtools.network.HARLog) {
-    const requests = (xhrLog.entries as chrome.devtools.network.Request[])
-
+async function saveWeb(requests: chrome.devtools.network.Request[]) {
     const files: FileItem[] = []
     for (const index in requests) {
         const request = requests[index]

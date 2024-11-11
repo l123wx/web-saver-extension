@@ -1,5 +1,5 @@
 export interface RequestData {
-  id: number;
+  id: React.Key;
   url: string;
   method: string;
   status: number;

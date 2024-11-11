@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import saveWeb from '../utils/saver';
 
 import RequestTable from './components/RequestTable';
 import { RequestData } from './types';
@@ -36,16 +35,8 @@ const Panel: React.FC = () => {
     }
   }, []);
 
-  const handleButtonClick = async () => {
-    chrome.devtools.network.getHAR(log => {
-      saveWeb(log)
-    })
-  }
-
   return (
     <div className="panel-container">
-      {/* 当前页面 pageId 为：{currentPageId} */}
-      <button onClick={handleButtonClick}> Start </button>
       <RequestTable requests={requests} />
     </div>
   );
