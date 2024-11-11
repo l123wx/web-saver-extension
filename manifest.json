@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "Network Monitor",
+    "version": "1.0",
+    "description": "监控网络请求的 Chrome 扩展",
+    "devtools_page": "index.html",
+    "host_permissions": [
+        "*://*/*"
+    ],
+    "permissions": [
+        "tabs",
+        "downloads",
+        "notifications"
+    ]
+}
