@@ -1,50 +1,27 @@
-# React + TypeScript + Vite
+# Web Saver extension
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+用于爬取网站资源的 Chrome Extension，会将根据网页请求，将所有请求内容根据原目录保存到本地，如：html，css，js，image，xhr 等
 
-Currently, two official plugins are available:
+## 使用方法
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+安装方法请看：https://developer.chrome.google.cn/docs/extensions/get-started/tutorial/hello-world?hl=zh-cn#load-unpacked
 
-## Expanding the ESLint configuration
+1. 在需要爬取的网站打开开发者工具（F12）
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+2. 选择 Web Saver Tab
 
-- Configure the top-level `parserOptions` property like this:
+3. 刷新网页，等待所有请求完成
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+4. 点击 Start Saving 按钮，稍等片刻会自动下载一个包含代码和请求的压缩包
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+5. 调整代码，根据实际情况将请求地址改为请求本地文件
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## 关于接口
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+对于接口，会直接把相应内容保存为文本文件，并将 params 的 `?` 和 `&` 连接符分别替换为 `__` 和 `_`
+
+所以如果可行，可以通过修改代码将 get 请求的 params 也按上方的规则替换，这样可以直接访问本地文件实现 mock 请求的效果。
+
+例如：
+
+将 `example.com/getList?page=1&pageSize=10` 改为 `example.com/getList__page=1_pageSize=10`，访问本地 `example.com` 路径下的 `getList__page=1_pageSize=10` 文件

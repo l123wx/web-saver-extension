@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Network Monitor",
+    "name": "Web Saver",
     "version": "1.0",
-    "description": "监控网络请求的 Chrome 扩展",
+    "description": "用于爬取网站资源的 Chrome Extension，会将根据网页请求，将所有请求内容根据原目录保存到本地，如：html，css，js，image，xhr 等",
     "devtools_page": "index.html",
     "host_permissions": [
         "*://*/*"
