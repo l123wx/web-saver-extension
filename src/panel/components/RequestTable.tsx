@@ -1,10 +1,10 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Input, Table, Flex, Button, ConfigProvider, Empty } from 'antd'
+import { Input, Table, Flex, ConfigProvider, Empty } from 'antd'
 import type { TableColumnType, InputRef, TableProps } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import Highlighter from 'react-highlight-words';
 
-import saveWeb from '../../utils/saver';
+import SaverButton from './SaverButton'
 import { RequestData } from '../types';
 
 interface Props {
@@ -93,19 +93,27 @@ const RequestTable: React.FC<Props> = ({ requests }) => {
         setSearchString((event.target as HTMLInputElement).value)
     }
 
-    const handleButtonClick = async () => {
-        chrome.devtools.network.getHAR(log => {
-            saveWeb(log.entries as chrome.devtools.network.Request[])
-        })
-    }
-
     return (
-        <div className="request-table">
-            <Flex vertical gap={10}>
-                <Flex justify='space-between' gap={10}>
-                    <Button type="primary" onClick={handleButtonClick}>Start Saving</Button>
-                    <Input value={searchText} onInput={handleInput} addonBefore={<SearchOutlined />} />
-                </Flex>
+        <Flex
+            vertical
+            gap={10}
+            style={{
+                height: '100vh',
+                padding: 10,
+                boxSizing: 'border-box',
+                overflow: 'hidden'
+            }}
+        >
+            <Flex justify='space-between' gap={10}>
+                <SaverButton />
+                <Input value={searchText} onInput={handleInput} addonBefore={<SearchOutlined />} />
+            </Flex>
+            <div
+                style={{
+                    flex: 1,
+                    overflowY: 'auto'
+                }}
+            >
                 <ConfigProvider renderEmpty={() =>
                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="刷新页面加载请求数据" />
                 }>
@@ -114,14 +122,12 @@ const RequestTable: React.FC<Props> = ({ requests }) => {
                         columns={columns}
                         dataSource={activeRequests}
                         sticky
+                        rowKey="id"
                         pagination={false}
-                        scroll={{
-                            y: "50vh"
-                        }}
                     />
                 </ConfigProvider>
-            </Flex>
-        </div>
+            </div>
+        </Flex>
     );
 };
 

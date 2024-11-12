@@ -1,17 +1,24 @@
 
 import JSZip from "jszip"
 
-async function saveWeb(requests: chrome.devtools.network.Request[]) {
+async function saveWeb(
+    requests: chrome.devtools.network.Request[],
+    onProgress?: (progress: number) => void
+) {
+    onProgress?.(0)
     const files: FileItem[] = []
+    const requestNumber = requests.length - 1
     for (const index in requests) {
         const request = requests[index]
+        const requestUrl = request.request.url
 
         // 过滤浏览器扩展请求
         if (request.request.httpVersion === 'chrome-extension') continue;
         // 过滤百度统计请求
-        if (request.request.url.includes('hm.baidu.com')) continue;
+        if (requestUrl.includes('hm.baidu.com')) continue;
+        // 过滤数据 URL
+        if (requestUrl.startsWith('data:image')) continue;
 
-        // console.log(`开始保存第 ${index}/${requests.length - 1} 个请求`)
         const { content, encoding } = await new Promise<{ content: string, encoding: string }>(resolve => {
             request.getContent((content, encoding) => resolve({ content, encoding }))
         })
@@ -19,7 +26,7 @@ async function saveWeb(requests: chrome.devtools.network.Request[]) {
         // 过滤相应内容为空的请求
         if (!content) continue
 
-        const url = new URL(request.request.url);
+        const url = new URL(requestUrl);
 
         let path = `${url.hostname}${url.pathname}`
         if (request._resourceType === 'document' && !(url.pathname.endsWith('.html') || url.pathname.endsWith('.htm'))) {
@@ -36,11 +43,14 @@ async function saveWeb(requests: chrome.devtools.network.Request[]) {
             encoding,
             content,
         })
-        // console.log(`成功保存第 ${index}/${requests.length - 1} 个请求`)
-        console.log(`${index}/${requests.length - 1}`, path, content?.length)
+
+        onProgress?.(Number(index) / requestNumber)
     }
 
-    return createZipFile(files)
+    await createZipFile(files)
+
+    onProgress?.(1)
+    return Promise.resolve()
 }
 
 type FileItem = {
