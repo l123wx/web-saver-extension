@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Input, Table, Flex, ConfigProvider, Empty } from 'antd'
+import { Input, Table, Flex, ConfigProvider, Empty, Alert } from 'antd'
 import type { TableColumnType, InputRef, TableProps } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import Highlighter from 'react-highlight-words';
@@ -105,9 +105,10 @@ const RequestTable: React.FC<Props> = ({ requests }) => {
             }}
         >
             <Flex justify='space-between' gap={10}>
-                <SaverButton />
+                <SaverButton requests={requests.map(request => request.rawRequest)} />
                 <Input value={searchText} onInput={handleInput} addonBefore={<SearchOutlined />} />
             </Flex>
+            <Alert message={`发现 ${requests.length} 个请求`} type="info" showIcon />
             <div
                 style={{
                     flex: 1,
