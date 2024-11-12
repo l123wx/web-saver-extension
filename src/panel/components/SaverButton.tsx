@@ -21,21 +21,21 @@ const progressConfig = {
     }
 } as const
 
-type Props = object
+type Props = {
+    requests: chrome.devtools.network.Request[]
+}
 
-const ServerButton: React.FC<Props> = () => {
+const ServerButton: React.FC<Props> = (props) => {
     const [progress, setProgress] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
 
     const handleButtonClick = async () => {
-        chrome.devtools.network.getHAR(async log => {
-            try {
-                setIsLoading(true)
-                await saveWeb(log.entries as chrome.devtools.network.Request[], throttle(setProgress, 100))
-            } finally {
-                setIsLoading(false)
-            }
-        })
+        try {
+            setIsLoading(true)
+            await saveWeb(props.requests, throttle(setProgress, 50))
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return <div style={{

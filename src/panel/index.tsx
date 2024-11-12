@@ -26,9 +26,9 @@ const Panel: React.FC = () => {
     });
 
     // 页面导航时清除请求列表
-    chrome.devtools.network.onNavigated.addListener(() => {
-      setRequests([]);
-    });
+    // chrome.devtools.network.onNavigated.addListener(() => {
+    //   setRequests([]);
+    // });
 
     return () => {
       setRequests([]);

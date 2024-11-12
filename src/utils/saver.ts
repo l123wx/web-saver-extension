@@ -7,7 +7,7 @@ async function saveWeb(
 ) {
     onProgress?.(0)
     const files: FileItem[] = []
-    const requestNumber = requests.length - 1
+    const requestNumber = requests.length
     for (const index in requests) {
         const request = requests[index]
         const requestUrl = request.request.url
@@ -29,7 +29,8 @@ async function saveWeb(
         const url = new URL(requestUrl);
 
         let path = `${url.hostname}${url.pathname}`
-        if (request._resourceType === 'document' && !(url.pathname.endsWith('.html') || url.pathname.endsWith('.htm'))) {
+        // 处理省略 index.html 的路径
+        if (request.response.content.mimeType === 'text/html' && !(url.pathname.endsWith('.html') || url.pathname.endsWith('.htm'))) {
             path += '/index.html'
         }
 
