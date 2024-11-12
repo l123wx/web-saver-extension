@@ -6,8 +6,10 @@ async function saveWeb(requests: chrome.devtools.network.Request[]) {
     for (const index in requests) {
         const request = requests[index]
 
-        // 排除浏览器扩展请求
+        // 过滤浏览器扩展请求
         if (request.request.httpVersion === 'chrome-extension') continue;
+        // 过滤百度统计请求
+        if (request.request.url.includes('hm.baidu.com')) continue;
 
         // console.log(`开始保存第 ${index}/${requests.length - 1} 个请求`)
         const { content, encoding } = await new Promise<{ content: string, encoding: string }>(resolve => {
