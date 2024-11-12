@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import Panel from './panel';
 
 chrome.devtools.panels.create(
-    "网络监听器",
+    "Web Saver",
     "",
     "index.html",
     (panel) => {
